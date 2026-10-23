@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KOL／代理商結算模擬器</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;color:#202833;background:#f4f6f8}*{box-sizing:border-box}body{margin:0}header{background:#18212b;color:#fff;padding:25px 18px}.wrap{max-width:1120px;margin:auto;padding:0 16px}h1{margin:0 0 7px;font-size:clamp(22px,3vw,30px)}header p{margin:0;color:#cbd5df}main{padding:22px 0 40px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:#fff;border:1px solid #e1e7ed;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px #17212b08}h2{font-size:18px;margin:0 0 14px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.full{grid-column:1/-1}label{font-size:13px;font-weight:650;color:#4b5662}input{width:100%;min-width:0;padding:10px;border:1px solid #ccd5de;border-radius:8px;font:inherit;background:#fff}input:focus{outline:2px solid #a9cbff;border-color:#3979c9}.muted,small{font-size:12px;color:#687582;line-height:1.55}.note{background:#fff8e8;border:1px solid #f1d69d;color:#674b12;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.55;margin-bottom:16px}.formula{background:#f6f8fa;border-radius:9px;padding:12px;font-size:13px;line-height:1.8;margin-top:14px}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.sectionhead h2{margin:0}button{border:0;border-radius:9px;padding:10px 13px;font:inherit;font-weight:650;cursor:pointer;background:#1f6feb;color:#fff}button.secondary{background:#edf2f7;color:#26323d;border:1px solid #d8e0e8}button.danger{background:#fff0f0;color:#972c2c;border:1px solid #efcccc}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px;min-width:540px}th,td{padding:10px;border-bottom:1px solid #e8edf1;text-align:right;white-space:nowrap}th{background:#f7f9fb;color:#53606c}th:first-child,td:first-child{text-align:left}.scheme{border:1px solid #e0e6ec;border-radius:11px;padding:14px;margin:12px 0}.schemehead{display:flex;gap:8px;align-items:center;margin-bottom:12px}.schemehead input{font-weight:700}.schemefields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.kpi{padding:13px;border-radius:10px;background:#f7f9fb;border:1px solid #e8edf1}.kpi span{display:block;color:#65717e;font-size:12px;margin-bottom:7px}.kpi strong{font-size:clamp(17px,2vw,23px);overflow-wrap:anywhere}.positive{color:#18794e}.negative{color:#b42318}footer{font-size:12px;color:#697582;line-height:1.6;margin-top:14px}@media(max-width:740px){.grid{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.full{grid-column:auto}.kpis{grid-template-columns:1fr}}@media print{header{background:#fff;color:#111;border-bottom:2px solid #333}header p{color:#333}.actions,button{display:none}.card{box-shadow:none}body{background:#fff}}
+</style></head>
+<body>
+<header><div class="wrap"><h1>KOL／代理商結算模擬器</h1><p>繁體中文・日圓（JPY）・收入、KOL 費用與獎勵金額試算</p></div></header>
+<main class="wrap">
+<div class="note"><strong>計算規則：</strong>付費總金額＝遊戲新增用戶人數 × 平均每位用戶付費金額。公司收益＝付費總金額－KOL 費用－獎勵金額。獎勵金額依新增用戶人數對應的階梯取得。階梯金額及各方案 KOL 費用目前保留可編輯示範值，請替換成實際方案數據。</div>
+<div class="grid">
+<section class="card">
+<h2>一、項目輸入數據</h2>
+<div class="fields">
+<div class="field full"><label for="users">遊戲新增用戶人數（人）</label><input id="users" type="number" min="0" step="1" value="250"></div>
+<div class="field"><label for="total">付費總金額（¥）</label><input id="total" type="number" min="0" step="1" value="300000"></div>
+<div class="field"><label for="avg">平均每位用戶付費金額（¥）</label><input id="avg" type="number" min="0" step="0.01" value="1200"></div>
+</div>
+<div class="formula"><strong>聯動方式</strong><br>修改新增用戶人數或平均付費金額 → 自動更新付費總金額。<br>修改付費總金額 → 自動反算平均每位用戶付費金額。<br><span class="muted">當新增用戶人數為 0 時，平均付費金額顯示為 0；付費總金額仍可輸入，但公式一致性會提示檢查。</span></div>
+</section>
+<section class="card">
+<h2>二、公司收益計算規則</h2>
+<div class="formula" style="margin-top:0"><strong>公司收益＝付費總金額－成本</strong><br>成本＝KOL 費用＋獎勵金額<br><br><strong>獎勵金額：</strong>依遊戲新增用戶人數，從下方獎勵階梯中選取符合的級距。<br><strong>各方案公司收益：</strong>付費總金額－該方案 KOL 費用－獎勵金額。</div>
+<p class="muted">目前假設每個方案使用同一套獎勵階梯，方案之間的差異為 KOL 費用。若實際上各方案獎勵規則不同，可再擴充成每個方案獨立設定。</p>
+</section>
+</div>
+<section class="card">
+<div class="sectionhead"><h2>三、獎勵金額階梯設定</h2><button class="secondary" id="addTier">＋新增級距</button></div>
+<div class="tablewrap"><table id="tierTable"><thead><tr><th>新增用戶人數下限（含）</th><th>新增用戶人數上限（含；留空＝無上限）</th><th>獎勵金額（¥）</th><th>操作</th></tr></thead><tbody></tbody></table></div>
+<p class="muted">保留上一版的示範階梯：0–100 人 ¥30,000；101–400 人 ¥50,000；401–1,000 人 ¥80,000；1,001 人以上 ¥120,000。請依正式規則修改。</p>
+</section>
+<section class="card">
+<div class="sectionhead"><h2>四、合作方案設定與比較</h2><button id="addScheme">＋新增方案</button></div>
+<div id="schemes"></div>
+<div class="actions"><button id="run">重新計算</button><button class="secondary" id="csv">匯出 CSV（Excel 可開啟）</button><button class="secondary" id="xls">匯出 Excel 相容檔（.xls）</button><button class="secondary" id="print">列印／另存 PDF</button><button class="secondary" id="reset">還原示範數據</button></div>
+</section>
+<section class="card">
+<h2>五、試算摘要與方案比較</h2>
+<div class="kpis">
+<div class="kpi"><span>付費總金額</span><strong id="kTotal">—</strong></div>
+<div class="kpi"><span>符合級距的獎勵金額</span><strong id="kReward">—</strong></div>
+<div class="kpi"><span>新增用戶人均付費</span><strong id="kAvg">—</strong></div>
+</div>
+<div class="tablewrap" style="margin-top:16px"><table id="results"><thead><tr><th>合作方案</th><th>KOL 費用</th><th>獎勵金額</th><th>總成本</th><th>公司收益</th><th>成本／收入比</th></tr></thead><tbody></tbody></table></div>
+<p id="warnings" class="muted"></p>
+</section>
+<section class="card">
+<h2>六、尚需確認的規則</h2>
+<ul class="muted">
+<li>獎勵金額階梯的正式人數區間與金額是否與目前示範值相同。</li>
+<li>「遊戲新增用戶」的定義：註冊用戶、完成創角用戶，或歸因於 KOL 的新增用戶。</li>
+<li>付費總金額採總額或淨額：是否扣除退款、消費稅、平台手續費。</li>
+<li>KOL 費用是否含製作費、媒體費、稅金及其他支出。</li>
+<li>獎勵金額是依最終新增用戶數一次套用單一級距，還是採分段累進計算。此版本採「符合級距套用單一獎勵金額」。</li>
+<li>是否需要加入結算週期、退款追溯、付款手續費或其他成本。</li>
+</ul>
+</section>
+<footer>本工具為模擬試算模板，不構成會計、稅務或法律意見。資料僅在目前瀏覽器頁面計算，不會自動上傳或保存；重新整理頁面可能還原。</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>'¥'+Math.round(Number(n)||0).toLocaleString('ja-JP');
+const value=id=>Math.max(0,Number($(id).value)||0);
+let updating=false;
+const initialTiers=[{min:0,max:100,reward:30000},{min:101,max:400,reward:50000},{min:401,max:1000,reward:80000},{min:1001,max:'',reward:120000}];
+const initialSchemes=[{name:'方案 A｜基本合作',fee:50000},{name:'方案 B｜成效導向',fee:80000},{name:'方案 C｜低固定費方案',fee:30000}];
+function addTier(t={min:0,max:'',reward:0}){
+ const tr=document.createElement('tr');
+ tr.innerHTML=`<td><input class="min" type="number" min="0" step="1" value="${t.min}"></td><td><input class="max" type="number" min="0" step="1" value="${t.max}" placeholder="無上限"></td><td><input class="reward" type="number" min="0" step="1" value="${t.reward}"></td><td><button class="danger remove" type="button">刪除</button></td>`;
+ tr.querySelector('.remove').onclick=()=>{tr.remove();calculate()};
+ tr.querySelectorAll('input').forEach(el=>el.addEventListener('input',calculate));
+ $('tierTable').querySelector('tbody').appendChild(tr);
+}
+function readTiers(){return [...$('tierTable').querySelectorAll('tbody tr')].map(tr=>({min:Number(tr.querySelector('.min').value)||0,max:tr.querySelector('.max').value===''?Infinity:Number(tr.querySelector('.max').value),reward:Math.max(0,Number(tr.querySelector('.reward').value)||0)})).sort((a,b)=>a.min-b.min)}
+function addScheme(s={name:'新方案',fee:0}){
+ const div=document.createElement('div');div.className='scheme';
+ div.innerHTML=`<div class="schemehead"><input class="name" aria-label="方案名稱" value="${String(s.name).replace(/"/g,'&quot;')}"><button class="danger remove" type="button">刪除方案</button></div><div class="schemefields"><div class="field"><label>KOL 費用（¥）</label><input class="fee" type="number" min="0" step="1" value="${s.fee}"></div><div class="field"><label>費用說明（選填）</label><input class="description" type="text" placeholder="例如：含製作費／不含媒體費" value="${s.description||''}"></div></div><p class="muted schemeout">計算結果顯示於下方。</p>`;
+ div.querySelector('.remove').onclick=()=>{div.remove();calculate()};
+ div.querySelectorAll('input').forEach(el=>el.addEventListener('input',calculate));
+ $('schemes').appendChild(div);
+}
+function syncFromUsersOrAvg(){
+ if(updating)return;updating=true;
+ const users=value('users'),avg=value('avg');
+ $('total').value=String(Math.round(users*avg*100)/100);
+ updating=false;calculate();
+}
+function syncFromTotal(){
+ if(updating)return;updating=true;
+ const users=value('users'),total=value('total');
+ $('avg').value=users>0?(Math.round((total/users)*100)/100).toFixed(2):'0';
+ updating=false;calculate();
+}
+function calculate(){
+ const users=value('users'),total=value('total'),avg=value('avg'),tiers=readTiers();
+ const tier=tiers.find(t=>users>=t.min&&users<=t.max),reward=tier?tier.reward:0;
+ $('kTotal').textContent=money(total);$('kReward').textContent=money(reward);$('kAvg').textContent=money(avg);
+ const body=$('results').querySelector('tbody');body.innerHTML='';
+ let warnings=[];
+ if(!tier)warnings.push('目前新增用戶人數未落入任何獎勵級距，獎勵暫按 ¥0 計算，請檢查是否有級距缺漏。');
+ if(tiers.some(t=>t.max<t.min))warnings.push('有獎勵級距的上限小於下限，請修正。');
+ if(tiers.some((t,i)=>i>0&&t.min<=tiers[i-1].max))warnings.push('獎勵級距可能重疊，請檢查上下限。');
+ if(users===0&&total>0)warnings.push('新增用戶人數為 0，但付費總金額大於 0；人均付費無法由公式反算，請確認數據。');
+ if(Math.abs(total-users*avg)>1.01)warnings.push('付費總金額與新增用戶人數 × 平均每位用戶付費金額不一致，請確認輸入。');
+ [...$('schemes').querySelectorAll('.scheme')].forEach(div=>{
+  const name=div.querySelector('.name').value||'未命名方案',fee=valueFrom(div.querySelector('.fee'));
+  const cost=fee+reward,profit=total-cost,ratio=total>0?cost/total*100:0;
+  const tr=document.createElement('tr');
+  [name,money(fee),money(reward),money(cost),money(profit),ratio.toFixed(1)+'%'].forEach((v,i)=>{const td=document.createElement('td');td.textContent=v;if(i===4)td.className=profit<0?'negative':'positive';tr.appendChild(td)});
+  body.appendChild(tr);
+  div.querySelector('.schemeout').textContent=`獎勵 ${money(reward)} ・ 總成本 ${money(cost)} ・ 公司收益 ${money(profit)}`;
+ });
+ $('warnings').textContent=warnings.join(' ');
+}
+function valueFrom(el){return Math.max(0,Number(el.value)||0)}
+function rowsForExport(){return [['KOL／代理商結算模擬器'],['遊戲新增用戶人數',value('users')],['付費總金額（JPY）',value('total')],['平均每位用戶付費金額（JPY）',value('avg')],['獎勵金額（JPY）',readTiers().find(t=>value('users')>=t.min&&value('users')<=t.max)?.reward??0],[],[...$('results').querySelectorAll('thead th')].map(x=>x.textContent),...[...$('results').querySelectorAll('tbody tr')].map(tr=>[...tr.children].map(td=>td.textContent))]}
+function csvEscape(v){return '"'+String(v).replace(/"/g,'""')+'"'}
+function download(content,name,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function exportCsv(){download('\ufeff'+rowsForExport().map(row=>row.map(csvEscape).join(',')).join('\r\n'),'KOL_代理商結算.csv','text/csv;charset=utf-8;')}
+function exportXls(){const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');const rows=rowsForExport().map(row=>'<Row>'+row.map(v=>'<Cell><Data ss:Type="'+(typeof v==='number'?'Number':'String')+'">'+esc(v)+'</Data></Cell>').join('')+'</Row>').join('');const xml='<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="結算試算"><Table>'+rows+'</Table></Worksheet></Workbook>';download(xml,'KOL_代理商結算.xls','application/vnd.ms-excel;charset=utf-8;')}
+function reset(){updating=true;$('users').value=250;$('total').value=300000;$('avg').value=1200;updating=false;$('tierTable').querySelector('tbody').innerHTML='';initialTiers.forEach(addTier);$('schemes').innerHTML='';initialSchemes.forEach(addScheme);calculate()}
+$('users').addEventListener('input',syncFromUsersOrAvg);$('avg').addEventListener('input',syncFromUsersOrAvg);$('total').addEventListener('input',syncFromTotal);
+$('addTier').onclick=()=>{addTier();calculate()};$('addScheme').onclick=()=>{addScheme();calculate()};$('run').onclick=calculate;$('csv').onclick=exportCsv;$('xls').onclick=exportXls;$('print').onclick=()=>window.print();$('reset').onclick=reset;reset();
+</script></body></html>
